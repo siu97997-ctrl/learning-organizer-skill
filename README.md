@@ -1,69 +1,69 @@
 # Learning Organizer Skill
 
-Turn scattered learning conversations into one structured, searchable Notion handbook.
+[简体中文](README.md) | [English](README_EN.md)
 
-把分散在多个对话中的学习问题与回答，整理成一份按知识体系组织、按日期回顾的 Notion 学习手册。
+把分散在多个对话中的学习问题与回答，整理成一份结构清晰、方便检索的 Notion 学习手册。
 
-![Learning Organizer workflow](docs/workflow.svg)
+![Learning Organizer 工作流程](docs/workflow.svg)
 
-## Why this project
+## 为什么做这个项目
 
-Chat histories are chronological, but learning is conceptual. Important answers become difficult to retrieve, repeated questions create noise, and isolated notes fail to form a mental model.
+聊天记录通常按照时间排列，但真正的学习需要按照知识逻辑组织。随着对话越来越多，重要回答会变得难以查找，重复问题会产生大量噪声，零散笔记也很难帮助使用者建立完整的知识体系。
 
-Learning Organizer converts conversation history into a durable knowledge structure:
-
-```text
-Accessible learning conversations
-        ↓
-Question + answer extraction
-        ↓
-Semantic deduplication
-        ↓
-Knowledge-map classification
-        ↓
-Targeted Notion update
-        ↓
-Daily learning index + next steps
-```
-
-## Features
-
-- Collects question-and-answer pairs from accessible learning conversations
-- Organizes knowledge by concepts instead of chat chronology
-- Keeps a chronological index without duplicating full answers
-- Merges semantically equivalent questions
-- Adds prerequisites, related concepts, and next steps
-- Marks time-sensitive claims for verification
-- Uses targeted Notion edits and strict write boundaries
-- Works across AI, product, language, business, research, and other learning domains
-
-## Demo
-
-### Source conversations
+Learning Organizer 会把对话记录转化为可以长期积累的知识结构：
 
 ```text
-Monday: “What is an API?”
-Tuesday: “How do frontend and backend communicate?”
-Friday: “Where should an API key be stored?”
+可访问的学习对话
+        ↓
+提取问题与完整回答
+        ↓
+语义去重与内容合并
+        ↓
+按照知识体系分类
+        ↓
+定向更新 Notion 手册
+        ↓
+生成每日索引与下一步建议
 ```
 
-### Structured handbook
+## 主要功能
+
+- 从可访问的学习对话中提取问题和对应回答
+- 按照知识概念组织内容，而不是简单堆叠聊天记录
+- 保留每日学习索引，同时避免重复复制完整回答
+- 自动识别并合并语义相近的问题
+- 补充前置知识、相关概念和下一步学习建议
+- 标记可能随时间变化、需要重新核实的信息
+- 只对指定的 Notion 页面进行定向更新，严格限制写入范围
+- 可用于 AI、产品、语言、商业、研究等不同学习领域
+
+## 效果示例
+
+### 原始学习对话
 
 ```text
-Software Foundations
-├── What is an API?
-├── How frontend and backend communicate
-└── API key security
-
-Daily Learning Index
-├── Monday — API fundamentals
-├── Tuesday — request flow
-└── Friday — security boundary
+星期一：“API 是什么？”
+星期二：“前端和后端是如何通信的？”
+星期五：“API 密钥应该存放在哪里？”
 ```
 
-Each question expands into a short answer, full explanation, prerequisites, related concepts, and the original learning date. See [the complete sample](examples/sample-output.md).
+### 整理后的知识手册
 
-## Repository structure
+```text
+软件开发基础
+├── API 是什么？
+├── 前端和后端如何通信
+└── API 密钥安全
+
+每日学习索引
+├── 星期一 — API 基础
+├── 星期二 — 请求流程
+└── 星期五 — 安全边界
+```
+
+每个问题会包含简短结论、完整解释、前置知识、相关概念和最初学习日期。完整效果可以查看[输出示例](examples/sample-output.md)。
+
+## 仓库结构
 
 ```text
 skill/organize-learning/
@@ -76,56 +76,50 @@ examples/
 └── sample-output.md
 ```
 
-## Install
+## 安装和使用
 
-Install the skill from this repository's `skill/organize-learning` directory using Codex's Skill Installer, or copy that directory into your personal skills folder.
+使用 Codex 的 Skill Installer 安装本仓库中的 `skill/organize-learning` 目录，或者把这个目录复制到个人 Skill 文件夹。
 
-Then invoke it explicitly:
+安装后可以明确调用：
 
 ```text
-$organize-learning Organize today's learning into my existing Notion handbook.
+$organize-learning 整理今天的学习内容，并更新到我已有的 Notion 学习手册。
 ```
 
-Natural-language requests such as “organize today's learning” can also trigger the skill when implicit invocation is enabled.
+如果使用的 Agent 支持自然语言触发，也可以直接说“整理今天的学习内容”。
 
-## Requirements
+## 使用条件
 
-- Codex or another compatible agent-skills client
-- Access to the source conversations or exported chat content
-- A connected Notion workspace and an existing destination page
+- Codex 或其他兼容 Agent Skill 的客户端
+- 能够访问学习对话，或者已经导出的聊天内容
+- 已连接 Notion，并准备好一个用于接收内容的现有页面
 
-The skill asks for a destination when one cannot be identified safely. It never creates additional pages or changes sharing permissions without explicit permission.
+当系统无法安全确认目标页面时，这个 Skill 会先询问使用者。未经明确允许，它不会创建额外页面，也不会修改页面的分享权限。
 
-## Design decisions
+## 核心设计
 
-### One canonical answer
+### 一个问题只保留一份标准答案
 
-Complete answers live once in the knowledge map. The daily index links learning events without copying the entire answer.
+完整回答只保存在知识地图中。每日索引负责记录当天学过什么，但不会重复复制整篇回答。
 
-### Stable taxonomy, flexible domains
+### 稳定的结构，灵活的学习领域
 
-The skill preserves an existing handbook taxonomy. When no taxonomy exists, it applies a compact cross-domain classification guide rather than inventing many shallow categories.
+如果手册已经有分类体系，Skill 会优先沿用原结构。如果还没有分类体系，则使用简洁、通用的分类方法，避免创建大量零散栏目。
 
-### Safe incremental writes
+### 安全的增量更新
 
-The workflow fetches the destination before and after editing, favors targeted updates, and refuses to broaden the write scope silently.
+Skill 会在编辑前后读取目标页面，优先进行局部更新，并且不会在没有获得允许的情况下扩大写入范围。
 
-## Privacy and limitations
+## 隐私与限制
 
-- Only accessible conversations can be processed.
-- Deleted or unavailable chats cannot be reconstructed.
-- External platforms require a connector, export, or pasted content.
-- Do not store secrets or sensitive personal data in learning notes.
-- Review generated notes before relying on high-stakes or time-sensitive claims.
+- 只能整理当前环境能够访问的对话
+- 无法恢复已经删除或没有访问权限的聊天记录
+- 外部平台的内容需要连接器、导出文件或手动粘贴
+- 不建议把密码、密钥等敏感信息写入学习手册
+- 医疗、法律、金融和时效性信息在使用前仍需要人工核实
 
-## 中文说明
+公开版本不包含个人 Notion 地址、账号信息或固定知识分类，可以根据不同学习领域复用。
 
-这个 Skill 解决的是“聊天记录按时间堆积，但知识需要按逻辑组织”的问题。
-
-它会读取可访问的学习对话，提取问题和完整回答，进行语义去重，然后把内容放进已有 Notion 手册的知识分类中。同时维护每日学习索引、未解决问题和下一步行动。
-
-公开版本不包含任何个人 Notion 地址、账号信息或固定知识分类，可以根据不同学习领域复用。
-
-## License
+## 开源许可
 
 MIT
