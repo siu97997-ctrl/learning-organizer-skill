@@ -1,0 +1,6 @@
+interface:
+  display_name: "Learning Organizer"
+  short_description: "Structure scattered learning chats into one handbook"
+  default_prompt: "Use $organize-learning to consolidate today's learning into my existing Notion handbook."
+policy:
+  allow_implicit_invocation: true
