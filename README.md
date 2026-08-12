@@ -6,6 +6,16 @@
 
 ![Learning Organizer 工作流程](docs/workflow.svg)
 
+## 兼容性
+
+本 Skill 遵循通用的 **Agent Skill 规范**：`SKILL.md` 用 `name` / `description` frontmatter 描述触发条件，配套 `references/` 与 `assets/` 目录存放参考与模板。因此**任何兼容该规范的 Agent 都能直接使用**，包括但不限于：
+
+- OpenAI Codex / Codex CLI
+- Anthropic Claude（Agent SDK / Claude Code）
+- WorkBuddy
+
+目录里的 `agents/openai.yaml` 只是 Codex 的元数据（显示名、默认 prompt、隐式触发开关），其他 Agent 会自动忽略它，**不影响功能**。
+
 ## 为什么做这个项目
 
 聊天记录通常按照时间排列，但真正的学习需要按照知识逻辑组织。随着对话越来越多，重要回答会变得难以查找，重复问题会产生大量噪声，零散笔记也很难帮助使用者建立完整的知识体系。
@@ -68,7 +78,7 @@ Learning Organizer 会把对话记录转化为可以长期积累的知识结构�
 ```text
 skill/organize-learning/
 ├── SKILL.md
-├── agents/openai.yaml
+├── agents/openai.yaml        # 仅 Codex 使用；其他 Agent 忽略，可删除
 ├── references/classification-guide.md
 └── assets/handbook-template.md
 examples/
@@ -78,19 +88,43 @@ examples/
 
 ## 安装和使用
 
+### 通用（Claude / WorkBuddy 等）
+
+把 `skill/organize-learning/` 整个目录复制到对应 Agent 的个人或项目 skills 目录即可：
+
+```text
+<你的 Agent skills 目录>/
+└── organize-learning/
+    ├── SKILL.md
+    ├── agents/openai.yaml        # 仅 Codex 使用，可忽略
+    ├── references/classification-guide.md
+    └── assets/handbook-template.md
+```
+
+### Codex
+
 使用 Codex 的 Skill Installer 安装本仓库中的 `skill/organize-learning` 目录，或者把这个目录复制到个人 Skill 文件夹。
+
+### 触发方式
+
+不同 Agent 的调用约定略有差异，但都能通过自然语言和 `SKILL.md` 的 `description` 匹配触发：
+
+| Agent | 显式调用 | 自然语言触发 |
+|-------|----------|--------------|
+| Codex | `$organize-learning` | 支持（依赖 `openai.yaml` 的 `allow_implicit_invocation`） |
+| Claude / WorkBuddy | `/organize-learning`（如支持 slash 命令）或直接描述需求 | 支持（匹配 `SKILL.md` 的 `description`） |
 
 安装后可以明确调用：
 
 ```text
-$organize-learning 整理今天的学习内容，并更新到我已有的 Notion 学习手册。
+整理今天的学习内容，并更新到我已有的 Notion 学习手册。
 ```
 
 如果使用的 Agent 支持自然语言触发，也可以直接说“整理今天的学习内容”。
 
 ## 使用条件
 
-- Codex 或其他兼容 Agent Skill 的客户端
+- Codex 或其他兼容 Agent Skill 规范的客户端
 - 能够访问学习对话，或者已经导出的聊天内容
 - 已连接 Notion，并准备好一个用于接收内容的现有页面
 

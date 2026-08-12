@@ -6,6 +6,16 @@ Turn scattered learning conversations into one structured, searchable Notion han
 
 ![Learning Organizer workflow](docs/workflow.svg)
 
+## Compatibility
+
+This skill follows the common **Agent Skill specification**: `SKILL.md` uses `name` / `description` frontmatter to declare triggers, and ships `references/` and `assets/` directories for supporting content. Any agent that implements this spec can use it directly, including but not limited to:
+
+- OpenAI Codex / Codex CLI
+- Anthropic Claude (Agent SDK / Claude Code)
+- WorkBuddy
+
+The `agents/openai.yaml` file is Codex-only metadata (display name, default prompt, implicit-invocation flag). Other agents ignore it automatically, and it does not affect functionality.
+
 ## Why this project
 
 Chat histories are chronological, but learning is conceptual. Important answers become difficult to retrieve, repeated questions create noise, and isolated notes fail to form a mental model.
@@ -68,7 +78,7 @@ Each question expands into a short answer, full explanation, prerequisites, rela
 ```text
 skill/organize-learning/
 ├── SKILL.md
-├── agents/openai.yaml
+├── agents/openai.yaml        # Codex-only; ignored by other agents, safe to delete
 ├── references/classification-guide.md
 └── assets/handbook-template.md
 examples/
@@ -78,19 +88,43 @@ examples/
 
 ## Install
 
-Install the skill from this repository's `skill/organize-learning` directory using Codex's Skill Installer, or copy that directory into your personal skills folder.
+### Generic (Claude / WorkBuddy, etc.)
+
+Copy the entire `skill/organize-learning/` directory into your agent's personal or project skills folder:
+
+```text
+<your agent skills folder>/
+└── organize-learning/
+    ├── SKILL.md
+    ├── agents/openai.yaml        # Codex-only, can be ignored
+    ├── references/classification-guide.md
+    └── assets/handbook-template.md
+```
+
+### Codex
+
+Install the `skill/organize-learning` directory from this repository using Codex's Skill Installer, or copy the directory into your personal skills folder.
+
+### How to trigger
+
+Invocation conventions differ slightly between agents, but all of them can match the `SKILL.md` `description` via natural language:
+
+| Agent | Explicit invocation | Natural-language trigger |
+|-------|---------------------|--------------------------|
+| Codex | `$organize-learning` | Supported (via `openai.yaml` `allow_implicit_invocation`) |
+| Claude / WorkBuddy | `/organize-learning` if slash commands are supported, or just describe the need | Supported (matches `SKILL.md` `description`) |
 
 Then invoke it explicitly:
 
 ```text
-$organize-learning Organize today's learning into my existing Notion handbook.
+Organize today's learning into my existing Notion handbook.
 ```
 
 Natural-language requests such as “organize today's learning” can also trigger the skill when implicit invocation is enabled.
 
 ## Requirements
 
-- Codex or another compatible agent-skills client
+- Codex or another client compatible with the Agent Skill specification
 - Access to the source conversations or exported chat content
 - A connected Notion workspace and an existing destination page
 
